@@ -33,7 +33,8 @@ type Offer struct {
 }
 
 type FactInfos struct {
-	Id      string `db:"uuid"`
+	Id      int64
+	Uuid    string `db:"uuid"`
 	IsFirst bool
 	Link    string `db:"link"`
 	Date    string `db:"created"`
@@ -55,7 +56,7 @@ func CreateFact(factInfos FactEtab, factName string) {
 		})
 		m.ColSpace(6)
 		m.Col(4, func() {
-			m.Text("EasyAsPie - Facture "+factInfos.Fact_infos.Id, props.Text{
+			m.Text("EasyAsPie - Facture "+strconv.FormatInt(factInfos.Fact_infos.Id, 10), props.Text{
 				Top:         12,
 				Size:        8,
 				Extrapolate: true,
@@ -122,7 +123,7 @@ func CreateFact(factInfos FactEtab, factName string) {
 
 	m.Row(7, func() {
 		m.Col(4, func() {
-			m.Text("Numéro de Facture: "+factInfos.Fact_infos.Id, props.Text{
+			m.Text("Numéro de Facture: "+strconv.FormatInt(factInfos.Fact_infos.Id, 10), props.Text{
 				Size: 10,
 				Top:  2,
 			})
