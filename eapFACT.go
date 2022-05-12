@@ -177,14 +177,14 @@ func CreateFact(factInfos FactEtab, factName string) {
 			})
 		})
 		m.Col(3, func() {
-			m.Text(fmt.Sprintf("%2f", factInfos.Etab_offer.PriceHT), props.Text{
+			m.Text(fmt.Sprintf("%.2f", factInfos.Etab_offer.PriceHT), props.Text{
 				Size:  8,
 				Top:   1,
 				Align: consts.Center,
 			})
 		})
 		m.Col(3, func() {
-			m.Text(fmt.Sprintf("%2f", factInfos.Etab_offer.PriceTTC), props.Text{
+			m.Text(fmt.Sprintf("%.2f", factInfos.Etab_offer.PriceTTC), props.Text{
 				Size:  8,
 				Top:   1,
 				Align: consts.Center,
@@ -209,13 +209,13 @@ func CreateFact(factInfos FactEtab, factName string) {
 				})
 			})
 			m.Col(3, func() {
-				m.Text("-"+fmt.Sprintf("%2f", factInfos.Etab_offer.PriceHT), props.Text{
+				m.Text("-"+fmt.Sprintf("%.2f", factInfos.Etab_offer.PriceHT), props.Text{
 					Size:  8,
 					Top:   1,
 					Align: consts.Center})
 			})
 			m.Col(3, func() {
-				m.Text("-"+fmt.Sprintf("%2f", factInfos.Etab_offer.PriceTTC), props.Text{
+				m.Text("-"+fmt.Sprintf("%.2f", factInfos.Etab_offer.PriceTTC), props.Text{
 					Size:  8,
 					Top:   1,
 					Align: consts.Center})
@@ -241,7 +241,7 @@ func CreateFact(factInfos FactEtab, factName string) {
 				Align: consts.Center})
 		})
 		m.Col(3, func() {
-			m.Text(fmt.Sprintf("%2f", totalHT)+" €", props.Text{
+			m.Text(fmt.Sprintf("%.2f", totalHT)+" €", props.Text{
 				Size:  8,
 				Top:   1,
 				Align: consts.Center})
@@ -290,7 +290,7 @@ func CreateFact(factInfos FactEtab, factName string) {
 				Align: consts.Center})
 		})
 		m.Col(3, func() {
-			m.Text(fmt.Sprintf("%2f", totalTTC)+" €", props.Text{
+			m.Text(fmt.Sprintf("%.2f", totalTTC)+" €", props.Text{
 				Size:  15,
 				Top:   1,
 				Style: consts.Bold,
