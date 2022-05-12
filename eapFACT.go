@@ -34,7 +34,7 @@ func CreateFact() {
 	m.Row(50, func() {
 
 		m.Col(4, func() {
-			_ = m.FileImage("./logo.png", props.Rect{
+			_ = m.FileImage("../eap-FACT/logo.png", props.Rect{
 				Left:    0,
 				Top:     9,
 				Percent: 50,
