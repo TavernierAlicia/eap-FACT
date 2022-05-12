@@ -9,7 +9,38 @@ import (
 	"github.com/johnfercher/maroto/pkg/props"
 )
 
-func CreateFact() {
+type FactEtab struct {
+	Owner_civility string `db:"owner_civility"`
+	Owner_name     string `db:"owner_name"`
+	Owner_surname  string `db:"owner_surname"`
+	Mail           string `db:"mail"`
+	Phone          string `db:"phone"`
+	Name           string `db:"name"`
+	Fact_addr      string `db:"fact_addr"`
+	Fact_cp        int    `db:"fact_cp"`
+	Fact_city      string `db:"fact_city"`
+	Fact_country   string `db:"fact_country"`
+	Offer          int    `db:"offer"`
+	Fact_infos     FactInfos
+	Etab_offer     Offer
+}
+
+type Offer struct {
+	Id       int     `db:"id"`
+	Name     string  `db:"name"`
+	PriceHT  float64 `db:"priceHT"`
+	PriceTTC float64 `db:"priceTTC"`
+}
+
+type FactInfos struct {
+	Link string `db:"link"`
+	Date string `db:"created"`
+}
+
+func CreateFact(factInfos FactEtab, factName string) {
+
+	fmt.Println(factInfos)
+
 	m := pdf.NewMaroto(consts.Portrait, consts.Letter)
 
 	m.Row(20, func() {
