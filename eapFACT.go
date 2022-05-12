@@ -2,7 +2,6 @@ package eapFact
 
 import (
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/johnfercher/maroto/pkg/consts"
@@ -263,10 +262,9 @@ func CreateFact() {
 	// name := time.Now().Format("2006-01-02") + "_"+".pdf"
 	// fmt.Println(name)
 
-	err := m.OutputFileAndClose("./facts/zpl.pdf")
+	err := m.OutputFileAndClose("./factures/test.pdf")
 	if err != nil {
 		fmt.Println("Could not save PDF:", err)
-		os.Exit(1)
 	}
 
 }
