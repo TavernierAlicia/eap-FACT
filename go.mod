@@ -1,4 +1,4 @@
-module github.com/TavernierAlicia/eap-FACT
+module eapFact
 
 go 1.17
 
