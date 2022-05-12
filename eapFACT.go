@@ -167,7 +167,7 @@ func CreateFact(factInfos FactEtab, factName string) {
 		})
 	})
 
-	// Fact Items
+	// Fact  Items
 	m.Row(7, func() {
 		m.Col(6, func() {
 			m.Text(" Abonnement \""+factInfos.Etab_offer.Name+"\"", props.Text{
