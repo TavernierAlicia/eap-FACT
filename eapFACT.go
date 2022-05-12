@@ -2,7 +2,7 @@ package eapFact
 
 import (
 	"fmt"
-	"time"
+	"strconv"
 
 	"github.com/johnfercher/maroto/pkg/consts"
 	"github.com/johnfercher/maroto/pkg/pdf"
@@ -33,8 +33,10 @@ type Offer struct {
 }
 
 type FactInfos struct {
-	Link string `db:"link"`
-	Date string `db:"created"`
+	Id      string `db:"uuid"`
+	IsFirst bool
+	Link    string `db:"link"`
+	Date    string `db:"created"`
 }
 
 func CreateFact(factInfos FactEtab, factName string) {
@@ -45,7 +47,7 @@ func CreateFact(factInfos FactEtab, factName string) {
 
 	m.Row(20, func() {
 		m.Col(4, func() {
-			m.Text(time.Now().Format("2006-01-02 15:04:05"), props.Text{
+			m.Text(factInfos.Fact_infos.Date, props.Text{
 				Top:         12,
 				Size:        8,
 				Extrapolate: true,
@@ -53,7 +55,7 @@ func CreateFact(factInfos FactEtab, factName string) {
 		})
 		m.ColSpace(6)
 		m.Col(4, func() {
-			m.Text("EasyAsPie - Facture 33", props.Text{
+			m.Text("EasyAsPie - Facture "+factInfos.Fact_infos.Id, props.Text{
 				Top:         12,
 				Size:        8,
 				Extrapolate: true,
@@ -89,22 +91,22 @@ func CreateFact(factInfos FactEtab, factName string) {
 
 		m.ColSpace(4)
 		m.Col(4, func() {
-			m.Text("Le Baraque o Bahamas SAS", props.Text{
+			m.Text(factInfos.Name, props.Text{
 				Top:         10,
 				Size:        11,
 				Extrapolate: true,
 			})
-			m.Text("10 rue des Lilas", props.Text{
+			m.Text(factInfos.Fact_addr, props.Text{
 				Top:         15,
 				Size:        8,
 				Extrapolate: true,
 			})
-			m.Text("75010 Paris", props.Text{
+			m.Text(strconv.Itoa(factInfos.Fact_cp)+" "+factInfos.Fact_city, props.Text{
 				Top:         18,
 				Size:        8,
 				Extrapolate: true,
 			})
-			m.Text("FRANCE", props.Text{
+			m.Text(factInfos.Fact_country, props.Text{
 				Top:         21,
 				Size:        8,
 				Extrapolate: true,
@@ -120,14 +122,14 @@ func CreateFact(factInfos FactEtab, factName string) {
 
 	m.Row(7, func() {
 		m.Col(4, func() {
-			m.Text("Numéro de Facture: 33", props.Text{
+			m.Text("Numéro de Facture: "+factInfos.Fact_infos.Id, props.Text{
 				Size: 10,
 				Top:  2,
 			})
 		})
 		m.ColSpace(2)
 		m.Col(6, func() {
-			m.Text("Date: "+time.Now().Format("2006-01-02 15:04:05"), props.Text{
+			m.Text("Date: "+factInfos.Fact_infos.Date, props.Text{
 				Size:  10,
 				Top:   2,
 				Align: consts.Right,
@@ -155,7 +157,7 @@ func CreateFact(factInfos FactEtab, factName string) {
 			})
 		})
 		m.Col(3, func() {
-			m.Text("Montant € ", props.Text{
+			m.Text("Montant TTC € ", props.Text{
 				Size:  8,
 				Top:   1,
 				Style: consts.Bold,
@@ -167,21 +169,21 @@ func CreateFact(factInfos FactEtab, factName string) {
 	// Fact Items
 	m.Row(7, func() {
 		m.Col(6, func() {
-			m.Text(" Abonnement \"essential\"", props.Text{
+			m.Text(" Abonnement \""+factInfos.Etab_offer.Name+"\"", props.Text{
 				Size:  8,
 				Top:   1,
 				Align: consts.Left,
 			})
 		})
 		m.Col(3, func() {
-			m.Text("15,00", props.Text{
+			m.Text(fmt.Sprintf("%f", factInfos.Etab_offer.PriceHT), props.Text{
 				Size:  8,
 				Top:   1,
 				Align: consts.Center,
 			})
 		})
 		m.Col(3, func() {
-			m.Text("15,00", props.Text{
+			m.Text(fmt.Sprintf("%f", factInfos.Etab_offer.PriceTTC), props.Text{
 				Size:  8,
 				Top:   1,
 				Align: consts.Center,
@@ -189,28 +191,36 @@ func CreateFact(factInfos FactEtab, factName string) {
 		})
 	})
 
-	m.Row(7, func() {
-		m.Col(6, func() {
-			m.Text(" Premier mois offert", props.Text{
-				Size:  8,
-				Top:   1,
-				Align: consts.Left,
+	totalHT := factInfos.Etab_offer.PriceHT
+	totalTTC := factInfos.Etab_offer.PriceTTC
+
+	if factInfos.Fact_infos.IsFirst {
+
+		totalHT = factInfos.Etab_offer.PriceHT - factInfos.Etab_offer.PriceHT
+		totalTTC = factInfos.Etab_offer.PriceTTC - factInfos.Etab_offer.PriceTTC
+
+		m.Row(7, func() {
+			m.Col(6, func() {
+				m.Text(" Premier mois offert", props.Text{
+					Size:  8,
+					Top:   1,
+					Align: consts.Left,
+				})
+			})
+			m.Col(3, func() {
+				m.Text("-"+fmt.Sprintf("%f", factInfos.Etab_offer.PriceHT), props.Text{
+					Size:  8,
+					Top:   1,
+					Align: consts.Center})
+			})
+			m.Col(3, func() {
+				m.Text("-"+fmt.Sprintf("%f", factInfos.Etab_offer.PriceTTC), props.Text{
+					Size:  8,
+					Top:   1,
+					Align: consts.Center})
 			})
 		})
-		m.Col(3, func() {
-			m.Text("-15,00", props.Text{
-				Size:  8,
-				Top:   1,
-				Align: consts.Center})
-		})
-		m.Col(3, func() {
-			m.Text("-15,00", props.Text{
-				Size:  8,
-				Top:   1,
-				Align: consts.Center})
-		})
-	})
-
+	}
 	m.Row(7, func() {})
 
 	m.Row(7, func() {
@@ -230,7 +240,7 @@ func CreateFact(factInfos FactEtab, factName string) {
 				Align: consts.Center})
 		})
 		m.Col(3, func() {
-			m.Text("0,00€", props.Text{
+			m.Text(fmt.Sprintf("%f", totalHT)+" €", props.Text{
 				Size:  8,
 				Top:   1,
 				Align: consts.Center})
@@ -279,7 +289,7 @@ func CreateFact(factInfos FactEtab, factName string) {
 				Align: consts.Center})
 		})
 		m.Col(3, func() {
-			m.Text("0,00 €", props.Text{
+			m.Text(fmt.Sprintf("%f", totalTTC)+" €", props.Text{
 				Size:  15,
 				Top:   1,
 				Style: consts.Bold,
@@ -289,11 +299,7 @@ func CreateFact(factInfos FactEtab, factName string) {
 
 	m.SetBorder(false)
 
-	// generate name
-	// name := time.Now().Format("2006-01-02") + "_"+".pdf"
-	// fmt.Println(name)
-
-	err := m.OutputFileAndClose("./media/factures/test.pdf")
+	err := m.OutputFileAndClose(factInfos.Fact_infos.Link)
 	if err != nil {
 		fmt.Println("Could not save PDF:", err)
 	}
