@@ -42,8 +42,6 @@ type FactInfos struct {
 
 func CreateFact(factInfos FactEtab, factName string) {
 
-	fmt.Println(factInfos)
-
 	m := pdf.NewMaroto(consts.Portrait, consts.Letter)
 
 	m.Row(20, func() {
