@@ -40,7 +40,7 @@ type FactInfos struct {
 	Date    string `db:"created"`
 }
 
-func CreateFact(factInfos FactEtab) {
+func CreateFact(factInfos FactEtab) (err error) {
 
 	m := pdf.NewMaroto(consts.Portrait, consts.Letter)
 
@@ -298,9 +298,11 @@ func CreateFact(factInfos FactEtab) {
 
 	m.SetBorder(false)
 
-	err := m.OutputFileAndClose(factInfos.Fact_infos.Link)
+	err = m.OutputFileAndClose(factInfos.Fact_infos.Link)
 	if err != nil {
 		fmt.Println("Could not save PDF:", err)
 	}
+
+	return err
 
 }
