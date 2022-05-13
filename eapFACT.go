@@ -40,7 +40,7 @@ type FactInfos struct {
 	Date    string `db:"created"`
 }
 
-func CreateFact(factInfos FactEtab, factName string) {
+func CreateFact(factInfos FactEtab) {
 
 	m := pdf.NewMaroto(consts.Portrait, consts.Letter)
 
