@@ -377,8 +377,16 @@ func CreateTicket(id int64, dest string, PLOrder Order) (err error) {
 	m.SetBorder(true)
 
 	m.Row(7, func() {
-		m.Col(6, func() {
+		m.Col(4, func() {
 			m.Text("Référence ", props.Text{
+				Size:  8,
+				Top:   1,
+				Style: consts.Bold,
+				Align: consts.Center,
+			})
+		})
+		m.Col(2, func() {
+			m.Text("Quantité ", props.Text{
 				Size:  8,
 				Top:   1,
 				Style: consts.Bold,
@@ -407,8 +415,15 @@ func CreateTicket(id int64, dest string, PLOrder Order) (err error) {
 
 		// Fact  Items
 		m.Row(7, func() {
-			m.Col(6, func() {
-				m.Text(item.Name+" x"+strconv.Itoa(item.Quantity), props.Text{
+			m.Col(4, func() {
+				m.Text(item.Name, props.Text{
+					Size:  8,
+					Top:   1,
+					Align: consts.Left,
+				})
+			})
+			m.Col(2, func() {
+				m.Text(strconv.Itoa(item.Quantity), props.Text{
 					Size:  8,
 					Top:   1,
 					Align: consts.Left,
