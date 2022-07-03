@@ -408,7 +408,7 @@ func CreateTicket(id int64, dest string, PLOrder Order) (err error) {
 		// Fact  Items
 		m.Row(7, func() {
 			m.Col(6, func() {
-				m.Text(item.Name, props.Text{
+				m.Text(item.Name+" x"+strconv.Itoa(item.Quantity), props.Text{
 					Size:  8,
 					Top:   1,
 					Align: consts.Left,
