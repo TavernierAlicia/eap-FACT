@@ -325,7 +325,7 @@ func CreateFact(factInfos FactEtab) (err error) {
 
 }
 
-func createTicket(id int64, dest string, PLOrder Order) (err error) {
+func CreateTicket(id int64, dest string, PLOrder Order) (err error) {
 
 	m := pdf.NewMaroto(consts.Portrait, consts.Letter)
 
