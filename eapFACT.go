@@ -83,7 +83,7 @@ func CreateFact(factInfos FactEtab) (err error) {
 	m.Row(50, func() {
 
 		m.Col(4, func() {
-			_ = m.FileImage("http://cdn.easy-as-pie.fr/logo.png", props.Rect{
+			_ = m.FileImage("logo.png", props.Rect{
 				Left:    0,
 				Top:     9,
 				Percent: 50,
@@ -350,7 +350,7 @@ func CreateTicket(id int64, dest string, PLOrder Order) (err error) {
 	m.Row(50, func() {
 
 		m.Col(4, func() {
-			_ = m.FileImage("http://cdn.easy-as-pie.fr/logo.png", props.Rect{
+			_ = m.FileImage("logo.png", props.Rect{
 				Left:    0,
 				Top:     9,
 				Percent: 50,
