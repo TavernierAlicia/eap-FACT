@@ -3,6 +3,7 @@ package eapFact
 import (
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/johnfercher/maroto/pkg/consts"
 	"github.com/johnfercher/maroto/pkg/pdf"
@@ -25,6 +26,7 @@ type FactEtab struct {
 	Etab_offer     Offer
 }
 
+// Fact making structure
 type Offer struct {
 	Id       int     `db:"id"`
 	Name     string  `db:"name"`
@@ -38,6 +40,22 @@ type FactInfos struct {
 	IsFirst bool
 	Link    string `db:"link"`
 	Date    string `db:"created"`
+}
+
+// Ticket making structures
+type Order struct {
+	Cli_uuid    string        `json:"cli_uuid"`
+	Token       string        `json:"token"`
+	TotalTTC    float64       `json:"totalTTC"`
+	TotalHT     float64       `json:"totalHT"`
+	Order_items []*OrderItems `json:"Order_items"`
+}
+
+type OrderItems struct {
+	Item_id  int     `json:"item_id"`
+	Name     string  `json:"name"`
+	Price    float64 `json:"price"`
+	Quantity int     `json:"quantity"`
 }
 
 func CreateFact(factInfos FactEtab) (err error) {
@@ -299,6 +317,202 @@ func CreateFact(factInfos FactEtab) (err error) {
 	m.SetBorder(false)
 
 	err = m.OutputFileAndClose(factInfos.Fact_infos.Link)
+	if err != nil {
+		fmt.Println("Could not save PDF:", err)
+	}
+
+	return err
+
+}
+
+func createTicket(id int64, dest string, PLOrder Order) (err error) {
+
+	m := pdf.NewMaroto(consts.Portrait, consts.Letter)
+
+	m.Row(20, func() {
+		m.Col(4, func() {
+			m.Text(time.Now().Format("2006-02-01 15:04:05"), props.Text{
+				Top:         12,
+				Size:        8,
+				Extrapolate: true,
+			})
+		})
+		m.ColSpace(6)
+		m.Col(4, func() {
+			m.Text("EasyAsPie - Commande n°"+strconv.FormatInt(id, 10), props.Text{
+				Top:         12,
+				Size:        8,
+				Extrapolate: true,
+			})
+		})
+	})
+
+	m.Row(50, func() {
+
+		m.Col(4, func() {
+			_ = m.FileImage("../eap-FACT/logo.png", props.Rect{
+				Left:    0,
+				Top:     9,
+				Percent: 50,
+			})
+			m.Text("easy-as-pie.fr", props.Text{
+				Top:         34,
+				Size:        8,
+				Extrapolate: true,
+			})
+			m.Text("20 rue de Flandres, 75019 Paris", props.Text{
+				Top:         37,
+				Size:        8,
+				Extrapolate: true,
+			})
+			m.Text("", props.Text{
+				Top:         47,
+				Size:        8,
+				Extrapolate: true,
+			})
+
+		})
+	})
+
+	m.SetBorder(true)
+
+	m.Row(7, func() {
+		m.Col(6, func() {
+			m.Text("Référence ", props.Text{
+				Size:  8,
+				Top:   1,
+				Style: consts.Bold,
+				Align: consts.Center,
+			})
+		})
+		m.Col(3, func() {
+			m.Text("Prix HT € ", props.Text{
+				Size:  8,
+				Top:   1,
+				Style: consts.Bold,
+				Align: consts.Center,
+			})
+		})
+		m.Col(3, func() {
+			m.Text("Montant TTC € ", props.Text{
+				Size:  8,
+				Top:   1,
+				Style: consts.Bold,
+				Align: consts.Center,
+			})
+		})
+	})
+
+	for _, item := range PLOrder.Order_items {
+
+		// Fact  Items
+		m.Row(7, func() {
+			m.Col(6, func() {
+				m.Text(item.Name, props.Text{
+					Size:  8,
+					Top:   1,
+					Align: consts.Left,
+				})
+			})
+			m.Col(3, func() {
+				m.Text(fmt.Sprintf("%.2f", item.Price/1.2), props.Text{
+					Size:  8,
+					Top:   1,
+					Align: consts.Center,
+				})
+			})
+			m.Col(3, func() {
+				m.Text(fmt.Sprintf("%.2f", item.Price), props.Text{
+					Size:  8,
+					Top:   1,
+					Align: consts.Center,
+				})
+			})
+		})
+	}
+
+	totalHT := PLOrder.TotalHT
+	totalTTC := PLOrder.TotalTTC
+
+	m.Row(7, func() {})
+
+	m.Row(7, func() {
+		m.SetBorder(false)
+		m.Col(6, func() {
+			m.Text("", props.Text{
+				Size:  8,
+				Top:   1,
+				Align: consts.Left})
+		})
+		m.SetBorder(true)
+		m.Col(3, func() {
+			m.Text("Total HT ", props.Text{
+				Size:  8,
+				Top:   1,
+				Style: consts.Bold,
+				Align: consts.Center})
+		})
+		m.Col(3, func() {
+			m.Text(fmt.Sprintf("%.2f", totalHT)+" €", props.Text{
+				Size:  8,
+				Top:   1,
+				Align: consts.Center})
+		})
+	})
+
+	m.Row(7, func() {
+		m.SetBorder(false)
+		m.Col(6, func() {
+			m.Text("", props.Text{
+				Size:  8,
+				Top:   1,
+				Align: consts.Left})
+		})
+		m.SetBorder(true)
+		m.Col(3, func() {
+			m.Text("TVA ", props.Text{
+				Size:  8,
+				Top:   1,
+				Style: consts.Bold,
+				Align: consts.Center})
+		})
+		m.Col(3, func() {
+			m.Text("20%", props.Text{
+				Size:  8,
+				Top:   1,
+				Align: consts.Center})
+		})
+	})
+
+	m.Row(7, func() {})
+
+	m.SetBorder(false)
+	m.Row(7, func() {
+		m.Col(6, func() {
+			m.Text("", props.Text{
+				Size:  8,
+				Top:   1,
+				Align: consts.Left})
+		})
+		m.Col(3, func() {
+			m.Text("À PAYER TTC :", props.Text{
+				Size:  15,
+				Top:   1,
+				Style: consts.Bold,
+				Align: consts.Center})
+		})
+		m.Col(3, func() {
+			m.Text(fmt.Sprintf("%.2f", totalTTC)+" €", props.Text{
+				Size:  15,
+				Top:   1,
+				Style: consts.Bold,
+				Align: consts.Center})
+		})
+	})
+
+	m.SetBorder(false)
+
+	err = m.OutputFileAndClose(dest)
 	if err != nil {
 		fmt.Println("Could not save PDF:", err)
 	}
