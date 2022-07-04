@@ -58,6 +58,15 @@ type OrderItems struct {
 	Quantity int     `json:"quantity"`
 }
 
+type Infos struct {
+	Name         string `db:"name"`
+	Fact_addr    string `db:"addr"`
+	Fact_cp      int    `db:"cp"`
+	Fact_city    string `db:"city"`
+	Fact_country string `db:"country"`
+	Picture      string `db:"picture"`
+}
+
 func CreateFact(factInfos FactEtab) (err error) {
 
 	m := pdf.NewMaroto(consts.Portrait, consts.Letter)
@@ -325,7 +334,7 @@ func CreateFact(factInfos FactEtab) (err error) {
 
 }
 
-func CreateTicket(id int64, dest string, PLOrder Order) (err error) {
+func CreateTicket(id int64, dest string, PLOrder Order, etab Infos) (err error) {
 
 	m := pdf.NewMaroto(consts.Portrait, consts.Letter)
 
@@ -350,17 +359,17 @@ func CreateTicket(id int64, dest string, PLOrder Order) (err error) {
 	m.Row(50, func() {
 
 		m.Col(4, func() {
-			_ = m.FileImage("logo.png", props.Rect{
+			_ = m.FileImage("/home/ec2-user/media/pictures/"+etab.Picture, props.Rect{
 				Left:    0,
 				Top:     9,
 				Percent: 50,
 			})
-			m.Text("easy-as-pie.fr", props.Text{
+			m.Text(etab.Name, props.Text{
 				Top:         34,
 				Size:        8,
 				Extrapolate: true,
 			})
-			m.Text("20 rue de Flandres, 75019 Paris", props.Text{
+			m.Text(etab.Fact_addr+", "+strconv.Itoa(etab.Fact_cp)+" "+etab.Fact_city, props.Text{
 				Top:         37,
 				Size:        8,
 				Extrapolate: true,
@@ -510,7 +519,7 @@ func CreateTicket(id int64, dest string, PLOrder Order) (err error) {
 				Align: consts.Left})
 		})
 		m.Col(3, func() {
-			m.Text("À PAYER TTC :", props.Text{
+			m.Text("PAYÉ TTC :", props.Text{
 				Size:  15,
 				Top:   1,
 				Style: consts.Bold,
