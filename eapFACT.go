@@ -426,7 +426,7 @@ func CreateTicket(id int64, dest string, PLOrder Order, etab Infos) (err error) 
 		// Fact  Items
 		m.Row(7, func() {
 			m.Col(4, func() {
-				m.Text(item.Name, props.Text{
+				m.Text("   "+item.Name, props.Text{
 					Size:  8,
 					Top:   1,
 					Align: consts.Left,
@@ -436,7 +436,7 @@ func CreateTicket(id int64, dest string, PLOrder Order, etab Infos) (err error) 
 				m.Text(strconv.Itoa(item.Quantity), props.Text{
 					Size:  8,
 					Top:   1,
-					Align: consts.Left,
+					Align: consts.Center,
 				})
 			})
 			m.Col(3, func() {
