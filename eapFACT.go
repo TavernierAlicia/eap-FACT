@@ -3,6 +3,7 @@ package eapFact
 import (
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/johnfercher/maroto/pkg/consts"
@@ -359,7 +360,7 @@ func CreateTicket(id int64, dest string, PLOrder Order, etab Infos) (err error) 
 	m.Row(50, func() {
 
 		m.Col(4, func() {
-			_ = m.FileImage(etab.Picture, props.Rect{
+			_ = m.FileImage("/home/ec2-user/media/pictures/"+strings.SplitN(etab.Picture, "/", 4)[0], props.Rect{
 				Left:    0,
 				Top:     9,
 				Percent: 50,
